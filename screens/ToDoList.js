@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, TextInput, TouchableOpacity, Text, Modal, View, Animated, ScrollView } from 'react-native';
+import { StyleSheet, TouchableOpacity, Text, Modal, View, Animated, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AntDesign } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
+import { SelectList } from 'react-native-dropdown-select-list'
 
 export default ToDoList = ({ navigation }) => {
 
@@ -67,6 +68,16 @@ export default ToDoList = ({ navigation }) => {
     AsyncStorage.setItem('salvadoPae', JSON.stringify(posicaoItem));
   }
 
+  const [selected, setSelected] = React.useState("");
+
+  const itensAlimento = [
+    { key: '1', value: 'Macarrão' },
+    { key: '2', value: 'Leite' },
+    { key: '3', value: 'Feijão' },
+    { key: '4', value: 'Arroz' },
+    { key: '5', value: 'Farinha' },
+  ]
+
   return (
     <ScrollView>
       <View style={styles.centeredView}>
@@ -81,12 +92,18 @@ export default ToDoList = ({ navigation }) => {
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <View style={styles.viewX}>
-                <Text style={styles.modalText}>Descrição A</Text>
+                <Text style={styles.modalText}>Guardar suprimento</Text>
                 <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
                   <Entypo name="cross" size={24} color="black" />
                 </TouchableOpacity>
               </View>
-              <TextInput style={styles.caixaTexto} onChangeText={setTexto} placeholder="Descrição" value={texto} multiline="true" numberOfLines={3} />
+              <SelectList
+                setSelected={(item) => setSelected(item)}
+                data={itensAlimento}
+                save="value"
+                placeholder="Selecione um suprimento"
+                searchPlaceholder="Buscar"
+              />
               <TouchableOpacity
                 style={styles.botaoSalvar}
                 onPress={() => {
