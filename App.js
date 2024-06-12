@@ -4,7 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { AntDesign } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import ToDoList from "./screens/ToDoList.js";
+import Estoque from "./screens/Estoque.js";
 import LoginScreen from "./screens/LoginScreen.js";
 
 const Stack = createNativeStackNavigator();
@@ -15,7 +15,7 @@ const getEstaLogado = async () => {
   return credenciais !== null;
 };
 
-function StackDoToDoList() {
+function StackDoEstoque() {
   const [estaLogado, setEstaLogado] = useState(null);
 
   useEffect(() => {
@@ -35,7 +35,7 @@ function StackDoToDoList() {
     <Stack.Navigator initialRouteName="LoginScreen">
       {estaLogado ? (
         <>
-          <Stack.Screen name="ToDoList" component={ToDoList} />
+          <Stack.Screen name="Estoque" component={Estoque} />
         </>
       ) : (
         <>
@@ -52,7 +52,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Tab.Navigator>
-        <Tab.Screen name="To Do List" component={StackDoToDoList} options={{
+        <Tab.Screen name="Estoque" component={StackDoEstoque} options={{
           headerShown: false,
           tabBarIcon: () => <AntDesign name="form" size={24} color="black" />
         }} />

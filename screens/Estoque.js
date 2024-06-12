@@ -1,41 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, TouchableOpacity, Text, Modal, View, Animated, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { AntDesign } from '@expo/vector-icons';
-import { Entypo } from '@expo/vector-icons';
-import { FontAwesome } from '@expo/vector-icons';
+import { AntDesign, Entypo, FontAwesome } from '@expo/vector-icons';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
-import { SelectList } from 'react-native-dropdown-select-list'
+import { SelectList } from 'react-native-dropdown-select-list';
 
-export default ToDoList = ({ navigation }) => {
-
-  const [texto, setTexto] = React.useState('');
-  const [value, setValue] = React.useState('');
+export default function Estoque({ navigation }) {
+  const [value, setValue] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
+  const [selected, setSelected] = useState(""); 
+
 
   const salvarTexto = async () => {
-    try {
-      const lista = [...value, texto];
-      await AsyncStorage.setItem('salvadoPae', JSON.stringify(lista));
-      setValue(lista);
-      setTexto('');
-    } catch (error) {
-      console.error('Erro ao salvar item:', error);
+    if (selected) { 
+      try {
+        const lista = [...value, selected]; 
+        await AsyncStorage.setItem('salvadoPae', JSON.stringify(lista));
+        setValue(lista); 
+        setSelected('');
+      } catch (error) {
+        console.error('Erro ao salvar item:', error);
+      }
     }
   };
 
-  async function mostrarTexto() {
+  const mostrarTexto = async () => {
     const response = await AsyncStorage.getItem('salvadoPae');
-    const parsedItem = JSON.parse(response)
-
+    const parsedItem = JSON.parse(response);
     if (parsedItem) {
-      setValue(parsedItem)
+      setValue(parsedItem); 
     }
-  }
+  };
 
   useEffect(() => {
-    mostrarTexto();
-
+    mostrarTexto(); 
     navigation.setOptions({
       headerRight: () => (
         <TouchableOpacity style={{ marginRight: 10, padding: 15 }} onPress={() => setModalVisible(true)}>
@@ -62,13 +60,11 @@ export default ToDoList = ({ navigation }) => {
     );
   };
 
-  function deletarItem(index) {
+  const deletarItem = (index) => {
     const posicaoItem = value.filter((_, i) => i !== index);
-    setValue(posicaoItem);
-    AsyncStorage.setItem('salvadoPae', JSON.stringify(posicaoItem));
-  }
-
-  const [selected, setSelected] = React.useState("");
+    setValue(posicaoItem); 
+    AsyncStorage.setItem('salvadoPae', JSON.stringify(posicaoItem)); 
+  };
 
   const itensAlimento = [
     { key: '1', value: 'Macarrão' },
@@ -76,7 +72,7 @@ export default ToDoList = ({ navigation }) => {
     { key: '3', value: 'Feijão' },
     { key: '4', value: 'Arroz' },
     { key: '5', value: 'Farinha' },
-  ]
+  ];
 
   return (
     <ScrollView>
@@ -85,10 +81,7 @@ export default ToDoList = ({ navigation }) => {
           animationType="slide"
           transparent={true}
           visible={modalVisible}
-          onRequestClose={() => {
-            Alert.alert('Modal has been closed.');
-            setModalVisible(!modalVisible);
-          }}>
+          onRequestClose={() => setModalVisible(!modalVisible)}>
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <View style={styles.viewX}>
@@ -118,15 +111,15 @@ export default ToDoList = ({ navigation }) => {
       </View>
       <Text style={styles.textoDefault}>Controle de estoque:</Text>
       {Array.isArray(value) && value.map((item, index) => (
-        <Swipeable renderRightActions={(dragX) => renderRightActions(dragX, index)} key={item}>
+        <Swipeable renderRightActions={(dragX) => renderRightActions(dragX, index)} key={index}>
           <View style={styles.itemArray}>
-            <Text style={styles.textoOutput}> {item} </Text>
+            <Text style={styles.textoOutput}>{item}</Text>
           </View>
         </Swipeable>
       ))}
     </ScrollView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   caixaTexto: {
@@ -141,8 +134,7 @@ const styles = StyleSheet.create({
     paddingTop: 30,
   },
   textoOutput: {
-    textAlign: 'center',
-    fontWeight: 'bold',
+    marginLeft:20,
     fontSize: 20,
     paddingTop: 10,
     paddingBottom: 10,
@@ -193,7 +185,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     flexDirection: 'row',
-    marginRight: 12
+    marginRight: 12,
   },
   swapEfeito: {
     flexDirection: 'row',
@@ -206,5 +198,5 @@ const styles = StyleSheet.create({
     marginLeft: 12,
     marginRight: 12,
     marginTop: 12,
-  }
+  },
 });
