@@ -10,16 +10,6 @@ export default function Estoque({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [selected, setSelected] = useState("");
   const [quantidade, setQuantidade] = useState("");
-<<<<<<< HEAD
-
-  const salvarTexto = async () => {
-    if (selected) {
-      try {
-        const lista = [...value, selected];
-        await AsyncStorage.setItem('salvadoPae', JSON.stringify(lista));
-        setValue(lista);
-        setSelected('');
-=======
   const [medida, setMedida] = useState("");
 
   const salvarTexto = async () => {
@@ -32,7 +22,6 @@ export default function Estoque({ navigation }) {
         setSelected('');
         setQuantidade('');
         setMedida('');
->>>>>>> b8b41ce (1.4)
       } catch (error) {
         console.error('Erro ao salvar item:', error);
       }
@@ -130,11 +119,7 @@ export default function Estoque({ navigation }) {
                 </View>
                 <View>
                   <SelectList
-<<<<<<< HEAD
-                    setSelected={(medida) => setSelected(medida)}
-=======
                     setSelected={(medida) => setMedida(medida)}
->>>>>>> b8b41ce (1.4)
                     data={itensMedida}
                     save="value"
                     placeholder="Medida"
@@ -159,11 +144,7 @@ export default function Estoque({ navigation }) {
       {Array.isArray(value) && value.map((item, index) => (
         <Swipeable renderRightActions={(dragX) => renderRightActions(dragX, index)} key={index}>
           <View style={styles.itemArray}>
-<<<<<<< HEAD
-            <Text style={styles.textoOutput}>{item}</Text>
-=======
             <Text style={styles.textoOutput}>{item.nome} - {item.quantidade} {item.medida}</Text>
->>>>>>> b8b41ce (1.4)
           </View>
         </Swipeable>
       ))}
@@ -215,64 +196,65 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     shadowOpacity: 0.6,
   },
-  centeredView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 22,
-  },
-  salvarTexto: {
-    color: 'white',
-    textAlign: 'center',
-    fontWeight: 'bold',
-  },
-  modalText: {
-    textAlign: 'left',
-    fontWeight: 'bold',
-    marginLeft: 12,
-  },
-  viewX: {
-    flex: 1,
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    flexDirection: 'row',
-    marginRight: 12,
-  },
-  swapEfeito: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    borderWidth: 1,
-    borderColor: 'black',
-    backgroundColor: 'lightcoral',
-    borderRadius: 5,
-    marginLeft: 12,
-    marginRight: 12,
-    marginTop: 12,
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  inputQuantidade: {
-    marginTop: 8,
-    marginLeft: 1,
-    marginRight: 1,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: '#9f9f9f',
-    padding: 10,
-    height: 44,
-  },
-  inputMedida: {
-    marginTop: 8,
-    marginLeft: 1,
-    marginRight: 1,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: '#9f9f9f',
-    padding: 10,
-    height: 44,
-    justifyContent: 'center',
-  }
-});
+ 
+    centeredView: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginTop: 22,
+    },
+    salvarTexto: {
+      color: 'white',
+      textAlign: 'center',
+      fontWeight: 'bold',
+    },
+    modalText: {
+      textAlign: 'left',
+      fontWeight: 'bold',
+      marginLeft: 12,
+    },
+    viewX: {
+      flex: 1,
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      flexDirection: 'row',
+      marginRight: 12,
+    },
+    swapEfeito: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'flex-end',
+      borderWidth: 1,
+      borderColor: 'black',
+      backgroundColor: 'lightcoral',
+      borderRadius: 5,
+      marginLeft: 12,
+      marginRight: 12,
+      marginTop: 12,
+    },
+    row: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    inputQuantidade: {
+      marginTop: 8,
+      marginLeft: 1,
+      marginRight: 1,
+      borderRadius: 10,
+      borderWidth: 1,
+      borderColor: '#9f9f9f',
+      padding: 10,
+      height: 44,
+    },
+    inputMedida: {
+      marginTop: 8,
+      marginLeft: 1,
+      marginRight: 1,
+      borderRadius: 10,
+      borderWidth: 1,
+      borderColor: '#9f9f9f',
+      padding: 10,
+      height: 44,
+      justifyContent: 'center',
+    }
+  });
