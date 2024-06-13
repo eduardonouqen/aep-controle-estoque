@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, TouchableOpacity, Text, Modal, View, Animated, ScrollView } from 'react-native';
+import { StyleSheet, TextInput, TouchableOpacity, Text, Modal, View, Animated, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AntDesign, Entypo, FontAwesome } from '@expo/vector-icons';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
@@ -8,15 +8,15 @@ import { SelectList } from 'react-native-dropdown-select-list';
 export default function Estoque({ navigation }) {
   const [value, setValue] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
-  const [selected, setSelected] = useState(""); 
-
+  const [selected, setSelected] = useState("");
+  const [quantidade, setQuantidade] = useState("");
 
   const salvarTexto = async () => {
-    if (selected) { 
+    if (selected) {
       try {
-        const lista = [...value, selected]; 
+        const lista = [...value, selected];
         await AsyncStorage.setItem('salvadoPae', JSON.stringify(lista));
-        setValue(lista); 
+        setValue(lista);
         setSelected('');
       } catch (error) {
         console.error('Erro ao salvar item:', error);
@@ -28,12 +28,12 @@ export default function Estoque({ navigation }) {
     const response = await AsyncStorage.getItem('salvadoPae');
     const parsedItem = JSON.parse(response);
     if (parsedItem) {
-      setValue(parsedItem); 
+      setValue(parsedItem);
     }
   };
 
   useEffect(() => {
-    mostrarTexto(); 
+    mostrarTexto();
     navigation.setOptions({
       headerRight: () => (
         <TouchableOpacity style={{ marginRight: 10, padding: 15 }} onPress={() => setModalVisible(true)}>
@@ -62,8 +62,8 @@ export default function Estoque({ navigation }) {
 
   const deletarItem = (index) => {
     const posicaoItem = value.filter((_, i) => i !== index);
-    setValue(posicaoItem); 
-    AsyncStorage.setItem('salvadoPae', JSON.stringify(posicaoItem)); 
+    setValue(posicaoItem);
+    AsyncStorage.setItem('salvadoPae', JSON.stringify(posicaoItem));
   };
 
   const itensAlimento = [
@@ -72,6 +72,11 @@ export default function Estoque({ navigation }) {
     { key: '3', value: 'Feijão' },
     { key: '4', value: 'Arroz' },
     { key: '5', value: 'Farinha' },
+  ];
+
+  const itensMedida = [
+    { key: '1', value: 'Kg' },
+    { key: '2', value: 'T' },
   ];
 
   return (
@@ -97,6 +102,28 @@ export default function Estoque({ navigation }) {
                 placeholder="Selecione um suprimento"
                 searchPlaceholder="Buscar"
               />
+              <View style={styles.row}>
+                <View>
+                  <TextInput
+                    style={styles.inputQuantidade}
+                    keyboardType='numeric'
+                    placeholder='Quantidade'
+                    value={quantidade}
+                    onChangeText={(text) => setQuantidade(text.replace(/[^0-9]/g, ''))}
+                    maxLength={3}
+                  />
+                </View>
+                <View>
+                  <SelectList
+                    setSelected={(medida) => setSelected(medida)}
+                    data={itensMedida}
+                    save="value"
+                    placeholder="Medida"
+                    search={false}
+                    boxStyles={styles.inputMedida}
+                  />
+                </View>
+              </View>
               <TouchableOpacity
                 style={styles.botaoSalvar}
                 onPress={() => {
@@ -134,7 +161,7 @@ const styles = StyleSheet.create({
     paddingTop: 30,
   },
   textoOutput: {
-    marginLeft:20,
+    marginLeft: 20,
     fontSize: 20,
     paddingTop: 10,
     paddingBottom: 10,
@@ -149,9 +176,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   botaoSalvar: {
-    marginLeft: 12,
-    marginRight: 12,
-    borderRadius: 5,
+    marginTop: 8,
+    marginLeft: 1,
+    marginRight: 1,
+    borderRadius: 10,
     padding: 10,
     backgroundColor: '#0095ee',
   },
@@ -199,4 +227,29 @@ const styles = StyleSheet.create({
     marginRight: 12,
     marginTop: 12,
   },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  inputQuantidade: {
+    marginTop: 8,
+    marginLeft: 1,
+    marginRight: 1,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#9f9f9f',
+    padding: 10,
+    height: 44,
+  },
+  inputMedida: {
+    marginTop: 8,
+    marginLeft: 1,
+    marginRight: 1,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#9f9f9f',
+    padding: 10,
+    height: 44,
+    justifyContent: 'center',
+  }
 });
