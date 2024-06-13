@@ -10,6 +10,7 @@ export default function Estoque({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [selected, setSelected] = useState("");
   const [quantidade, setQuantidade] = useState("");
+<<<<<<< HEAD
 
   const salvarTexto = async () => {
     if (selected) {
@@ -18,6 +19,20 @@ export default function Estoque({ navigation }) {
         await AsyncStorage.setItem('salvadoPae', JSON.stringify(lista));
         setValue(lista);
         setSelected('');
+=======
+  const [medida, setMedida] = useState("");
+
+  const salvarTexto = async () => {
+    if (selected && quantidade && medida) {
+      try {
+        const novoItem = { nome: selected, quantidade: quantidade, medida: medida };
+        const lista = [...value, novoItem];
+        await AsyncStorage.setItem('salvadoPae', JSON.stringify(lista));
+        setValue(lista);
+        setSelected('');
+        setQuantidade('');
+        setMedida('');
+>>>>>>> b8b41ce (1.4)
       } catch (error) {
         console.error('Erro ao salvar item:', error);
       }
@@ -115,7 +130,11 @@ export default function Estoque({ navigation }) {
                 </View>
                 <View>
                   <SelectList
+<<<<<<< HEAD
                     setSelected={(medida) => setSelected(medida)}
+=======
+                    setSelected={(medida) => setMedida(medida)}
+>>>>>>> b8b41ce (1.4)
                     data={itensMedida}
                     save="value"
                     placeholder="Medida"
@@ -140,7 +159,11 @@ export default function Estoque({ navigation }) {
       {Array.isArray(value) && value.map((item, index) => (
         <Swipeable renderRightActions={(dragX) => renderRightActions(dragX, index)} key={index}>
           <View style={styles.itemArray}>
+<<<<<<< HEAD
             <Text style={styles.textoOutput}>{item}</Text>
+=======
+            <Text style={styles.textoOutput}>{item.nome} - {item.quantidade} {item.medida}</Text>
+>>>>>>> b8b41ce (1.4)
           </View>
         </Swipeable>
       ))}
