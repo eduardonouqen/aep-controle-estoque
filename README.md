@@ -4,9 +4,10 @@ Segue a versão dinal do código utilizado para a AEP 2024.1.2 da UniCesumar
 
 Para rodar o código, insira no console:
 
-    1- node index.js
-    2- npm start
-    3- Press w │ open web
+    1- npm install
+    2- node index.js
+    3- npm start
+    4- Press w │ open web
 
 Alunos:
 
