@@ -8,7 +8,7 @@ Para rodar o código, insira no console:
     2- npm start
     3- Press w │ open web
 
-    Alunos:
+Alunos:
     - Eduardo de França Gonzalez - RA: 22066203-2
     - Alexandre Furuzawa Scramin - RA: 22103021-2
     - Victor Hugo Violada Pereira - RA: 22014452-2
