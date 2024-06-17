@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, TextInput, TouchableOpacity, Text, Modal, View, Animated, ScrollView } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 import { AntDesign, Entypo, FontAwesome } from '@expo/vector-icons';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { SelectList } from 'react-native-dropdown-select-list';
@@ -10,30 +10,10 @@ export default function Estoque({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [selected, setSelected] = useState("");
   const [quantidade, setQuantidade] = useState("");
-
-  const salvarTexto = async () => {
-    if (selected) {
-      try {
-        const lista = [...value, selected];
-        await AsyncStorage.setItem('salvadoPae', JSON.stringify(lista));
-        setValue(lista);
-        setSelected('');
-      } catch (error) {
-        console.error('Erro ao salvar item:', error);
-      }
-    }
-  };
-
-  const mostrarTexto = async () => {
-    const response = await AsyncStorage.getItem('salvadoPae');
-    const parsedItem = JSON.parse(response);
-    if (parsedItem) {
-      setValue(parsedItem);
-    }
-  };
+  const [medida, setMedida] = useState("");
 
   useEffect(() => {
-    mostrarTexto();
+    fetchItems();
     navigation.setOptions({
       headerRight: () => (
         <TouchableOpacity style={{ marginRight: 10, padding: 15 }} onPress={() => setModalVisible(true)}>
@@ -43,6 +23,41 @@ export default function Estoque({ navigation }) {
     });
   }, [navigation]);
 
+  const fetchItems = async () => {
+    try {
+      const response = await axios.get('http://localhost:3000/items');
+      setValue(response.data);
+    } catch (error) {
+      console.error('Erro ao buscar itens:', error);
+    }
+  };
+
+  const salvarTexto = async () => {
+    if (selected && quantidade && medida) {
+      try {
+        const novoItem = { nome: selected, quantidade: quantidade, medida: medida };
+        await axios.post('http://localhost:3000/add-item', novoItem);
+        fetchItems();
+        setSelected('');
+        setQuantidade('');
+        setMedida('');
+      } catch (error) {
+        console.error('Erro ao salvar item:', error);
+      }
+    } else {
+      console.log("Por favor, preencha todos os campos.");
+    }
+  };
+
+  const deletarItem = async (id) => {
+    try {
+      await axios.delete(`http://localhost:3000/delete-item/${id}`);
+      fetchItems();
+    } catch (error) {
+      console.error('Erro ao deletar item:', error);
+    }
+  };
+
   const renderRightActions = (dragX, index) => {
     const trans = dragX.interpolate({
       inputRange: [-100, 0, 100, 101],
@@ -50,7 +65,7 @@ export default function Estoque({ navigation }) {
     });
 
     return (
-      <TouchableOpacity style={styles.swapEfeito} onPress={() => deletarItem(index)}>
+      <TouchableOpacity style={styles.swapEfeito} onPress={() => deletarItem(value[index].id)}>
         <Animated.View style={{ transform: [{ translateX: trans }] }}>
           <View style={{ padding: 10 }}>
             <FontAwesome name="trash-o" size={24} color="black" />
@@ -58,12 +73,6 @@ export default function Estoque({ navigation }) {
         </Animated.View>
       </TouchableOpacity>
     );
-  };
-
-  const deletarItem = (index) => {
-    const posicaoItem = value.filter((_, i) => i !== index);
-    setValue(posicaoItem);
-    AsyncStorage.setItem('salvadoPae', JSON.stringify(posicaoItem));
   };
 
   const itensAlimento = [
@@ -115,7 +124,7 @@ export default function Estoque({ navigation }) {
                 </View>
                 <View>
                   <SelectList
-                    setSelected={(medida) => setSelected(medida)}
+                    setSelected={(medida) => setMedida(medida)}
                     data={itensMedida}
                     save="value"
                     placeholder="Medida"
@@ -140,7 +149,7 @@ export default function Estoque({ navigation }) {
       {Array.isArray(value) && value.map((item, index) => (
         <Swipeable renderRightActions={(dragX) => renderRightActions(dragX, index)} key={index}>
           <View style={styles.itemArray}>
-            <Text style={styles.textoOutput}>{item}</Text>
+            <Text style={styles.textoOutput}>{item.nome} - {item.quantidade} {item.medida}</Text>
           </View>
         </Swipeable>
       ))}
